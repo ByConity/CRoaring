@@ -642,6 +642,20 @@ roaring_bitmap_t *roaring_bitmap_or_many(size_t number,
 }
 
 /**
+ * Compute the union of 'number' bitmaps in place.
+ */
+void roaring_bitmap_or_many_in_place(size_t number,
+                                     roaring_bitmap_t **x) {
+    if (number <= 1) {
+        return;
+    }
+    for (size_t i = 1; i < number; i++) {
+        roaring_bitmap_lazy_or_inplace(x[0], x[i], LAZY_OR_BITSET_CONVERSION);
+    }
+    roaring_bitmap_repair_after_lazy(x[0]);
+}
+
+/**
  * Compute the xor of 'number' bitmaps.
  */
 roaring_bitmap_t *roaring_bitmap_xor_many(size_t number,
