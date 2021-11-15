@@ -192,7 +192,7 @@ static inline void roaring_bitmap_aligned_free(void *memblock) {
 #define WARN_UNUSED
 #endif
 
-#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+#define ROCKS_IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 
 static inline int hammingbackup(uint64_t x) {
   uint64_t c1 = UINT64_C(0x5555555555555555);
