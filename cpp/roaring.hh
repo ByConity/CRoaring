@@ -771,6 +771,22 @@ public:
         return ans;
     }
 
+    /**
+     * computes the logical or (union) between "n" bitmaps (referenced by a
+     * pointer).
+     */
+    static void fastunionInPlace(size_t n, Roaring **inputs) {
+        roaring_bitmap_t **x =
+            (roaring_bitmap_t **)malloc(n * sizeof(roaring_bitmap_t *));
+        if (x == NULL) {
+            throw std::runtime_error("failed memory alloc in fastunion");
+        }
+        for (size_t k = 0; k < n; ++k) x[k] = &inputs[k]->roaring;
+
+        roaring_bitmap_or_many_in_place(n, x);
+        free(x);
+    }
+
     typedef RoaringSetBitForwardIterator const_iterator;
 
     /**

@@ -487,6 +487,12 @@ public:
             ? false
             : roarings.at(highBytes(x)).contains(lowBytes(x));
     }
+    bool fastContains(uint64_t x) const {
+        auto roaring_iter = roarings.find(highBytes(x));
+        if (roaring_iter == roarings.end())
+            return false;
+        return roaring_iter->second.contains(lowBytes(x));
+    }
 
     /**
      * Compute the intersection of the current bitmap and the provided bitmap,
