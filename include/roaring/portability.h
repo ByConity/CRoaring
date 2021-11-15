@@ -228,7 +228,7 @@ inline int __builtin_clzll(unsigned long long input_num) {
 #define WARN_UNUSED
 #endif
 
-#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+#define ROCKS_IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
 
 #ifdef USENEON
 // we can always compute the popcount fast.
