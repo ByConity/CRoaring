@@ -43,9 +43,10 @@ namespace roaring {
 class RoaringSetBitForwardIterator;
 
 class Roaring {
-    typedef api::roaring_bitmap_t roaring_bitmap_t;  // class-local name alias
 
-public:
+   protected:
+    typedef api::roaring_bitmap_t roaring_bitmap_t;
+   public:
     /**
      * Create an empty bitmap in the existing memory for the class.
      * The bitmap will be in the "clear" state with no auxiliary allocations.
