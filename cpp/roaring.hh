@@ -666,6 +666,24 @@ public:
         return ans;
     }
 
+    static Roaring fastunion(size_t n, Roaring **inputs) {
+        const roaring_bitmap_t **x =
+            (const roaring_bitmap_t **)malloc(n * sizeof(roaring_bitmap_t *));
+        if (x == NULL) {
+            ROARING_TERMINATE("failed memory alloc in fastunion");
+        }
+        for (size_t k = 0; k < n; ++k) x[k] = &inputs[k]->roaring;
+
+        roaring_bitmap_t *c_ans = api::roaring_bitmap_or_many(n, x);
+        if (c_ans == NULL) {
+            free(x);
+            ROARING_TERMINATE("failed memory alloc in fastunion");
+        }
+        Roaring ans(c_ans);
+        free(x);
+        return ans;
+    }
+
     /**
      * computes the logical or (union) between "n" bitmaps (referenced by a
      * pointer).
