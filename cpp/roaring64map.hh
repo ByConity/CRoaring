@@ -4,8 +4,8 @@ A C++ header for 64-bit Roaring Bitmaps, implemented by way of a map of many
 */
 
 /*
- * This file may have been modified by ByteDance Ltd. (“ Bytedance's Modifications”).
- * All Bytedance's Modifications are Copyright (2022) ByteDance Ltd..
+ * This file may have been modified by Bytedance Ltd. and/or its affiliates (“ Bytedance's Modifications”).
+ * All Bytedance's Modifications are Copyright (2022) Bytedance Ltd. and/or its affiliates.
  */
 
 #ifndef INCLUDE_ROARING_64_MAP_HH_
