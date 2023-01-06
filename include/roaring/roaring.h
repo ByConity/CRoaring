@@ -203,6 +203,12 @@ roaring_bitmap_t *roaring_bitmap_or_many(size_t number,
                                          const roaring_bitmap_t **rs);
 
 /**
+ * Compute the union of 'number' bitmaps in place.
+ */
+void roaring_bitmap_or_many_in_place(size_t number,
+                                     roaring_bitmap_t **x);
+
+/**
  * Compute the union of 'number' bitmaps using a heap. This can sometimes be
  * faster than `roaring_bitmap_or_many() which uses a naive algorithm.
  * Caller is responsible for freeing the result.
@@ -816,4 +822,3 @@ uint32_t roaring_read_uint32_iterator(roaring_uint32_iterator_t *it,
         using namespace ::roaring::api;
     #endif
 #endif
-

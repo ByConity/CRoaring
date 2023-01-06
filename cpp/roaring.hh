@@ -42,9 +42,10 @@ namespace roaring {
 class RoaringSetBitForwardIterator;
 
 class Roaring {
-    typedef api::roaring_bitmap_t roaring_bitmap_t;  // class-local name alias
 
-public:
+   protected:
+    typedef api::roaring_bitmap_t roaring_bitmap_t;
+   public:
     /**
      * Create an empty bitmap in the existing memory for the class.
      * The bitmap will be in the "clear" state with no auxiliary allocations.
@@ -664,6 +665,40 @@ public:
         Roaring ans(c_ans);
         free(x);
         return ans;
+    }
+
+    static Roaring fastunion(size_t n, Roaring **inputs) {
+        const roaring_bitmap_t **x =
+            (const roaring_bitmap_t **)malloc(n * sizeof(roaring_bitmap_t *));
+        if (x == NULL) {
+            ROARING_TERMINATE("failed memory alloc in fastunion");
+        }
+        for (size_t k = 0; k < n; ++k) x[k] = &inputs[k]->roaring;
+
+        roaring_bitmap_t *c_ans = api::roaring_bitmap_or_many(n, x);
+        if (c_ans == NULL) {
+            free(x);
+            ROARING_TERMINATE("failed memory alloc in fastunion");
+        }
+        Roaring ans(c_ans);
+        free(x);
+        return ans;
+    }
+
+    /**
+     * computes the logical or (union) between "n" bitmaps (referenced by a
+     * pointer).
+     */
+    static void fastunionInPlace(size_t n, Roaring **inputs) {
+        roaring_bitmap_t **x =
+            (roaring_bitmap_t **)malloc(n * sizeof(roaring_bitmap_t *));
+        if (x == NULL) {
+            throw std::runtime_error("failed memory alloc in fastunion");
+        }
+        for (size_t k = 0; k < n; ++k) x[k] = &inputs[k]->roaring;
+
+        roaring_bitmap_or_many_in_place(n, x);
+        free(x);
     }
 
     typedef RoaringSetBitForwardIterator const_iterator;

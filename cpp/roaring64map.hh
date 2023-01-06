@@ -212,6 +212,12 @@ public:
             ? false
             : roarings.at(highBytes(x)).contains(lowBytes(x));
     }
+    bool fastContains(uint64_t x) const {
+        auto roaring_iter = roarings.find(highBytes(x));
+        if (roaring_iter == roarings.end())
+            return false;
+        return roaring_iter->second.contains(lowBytes(x));
+    }
 
     /**
      * Compute the intersection between the current bitmap and the provided
@@ -928,6 +934,19 @@ public:
         return ans;
     }
 
+    /**
+     * Computes the logical or (union) between "n" bitmaps (referenced by a
+     * pointer).
+     */
+    static Roaring64Map fastunion(size_t n, Roaring64Map **inputs) {
+        Roaring64Map ans;
+        // not particularly fast
+        for (size_t lcv = 0; lcv < n; ++lcv) {
+            ans |= *(inputs[lcv]);
+        }
+        return ans;
+    }
+
     friend class Roaring64MapSetBitForwardIterator;
     friend class Roaring64MapSetBitBiDirectionalIterator;
     typedef Roaring64MapSetBitForwardIterator const_iterator;
@@ -950,6 +969,7 @@ public:
      */
     const_iterator end() const;
 
+    const std::map<uint32_t, Roaring> & getRoarings() const { return roarings; }
 private:
     std::map<uint32_t, Roaring> roarings{}; // The empty constructor silences warnings from pedantic static analyzers.
     bool copyOnWrite{false};
