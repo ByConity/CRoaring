@@ -246,6 +246,13 @@ public:
         lookupOrCreateInner(0).addMany(n_args, vals);
     }
 
+    void addMany(size_t n_args, const uint32_t *vals, const uint32_t key) {
+        if (n_args == 0 || !vals)
+            return;
+
+        roarings[key].addMany(n_args, vals);
+    }
+
     /**
      * Adds 'n_args' values from the contiguous memory range starting at 'vals'.
      */
