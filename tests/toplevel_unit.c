@@ -47,6 +47,24 @@ bool roaring_iterator_sumall(uint32_t value, void *param) {
     return true;  // continue till the end
 }
 
+DEFINE_TEST(issue440) {
+    // return wrong res
+    roaring_bitmap_t *b1 = roaring_bitmap_create();
+    roaring_bitmap_add_range_closed(b1, 0x20000, 0x2FFFF);
+    roaring_bitmap_add_range_closed(b1, 0, 0xFFFF);
+    uint32_t largest_item = 0x11000;
+    assert_false(roaring_bitmap_contains_range(b1, 0, largest_item + 1));
+    assert_false(roaring_bitmap_contains(b1, largest_item));
+    roaring_bitmap_free(b1);
+
+    // may cause core
+    roaring_bitmap_t *b2 = roaring_bitmap_create();
+    roaring_bitmap_add_range_closed(b2, 0x10000, 0x1FFFF);
+    roaring_bitmap_add_range_closed(b2, 0, 0xFFFF);
+    uint32_t item = 0x20000;
+    assert_false(roaring_bitmap_contains(b2, 0x10000, item + 1));
+    roaring_bitmap_free(b2);
+}
 
 DEFINE_TEST(range_contains) {
     uint32_t end = 2073952257;
@@ -4176,6 +4194,7 @@ int main() {
     tellmeall();
 
     const struct CMUnitTest tests[] = {
+        cmocka_unit_test(issue440),
         cmocka_unit_test(issue316),
         cmocka_unit_test(issue288),
         cmocka_unit_test(issue245),
