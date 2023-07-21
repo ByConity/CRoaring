@@ -139,6 +139,13 @@ public:
         }
     }
 
+    void addMany(size_t n_args, const uint32_t *vals, const uint32_t key) {
+        if (n_args == 0 || !vals)
+            return;
+
+        roarings[key].addMany(n_args, vals);
+    }
+
     /**
      * Remove value x
      */
